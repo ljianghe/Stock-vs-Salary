@@ -1,0 +1,42 @@
+{% extends "global/Page.html" %}
+{% block content %}
+
+<h3>Comprehension Questions</h3>
+
+<p>
+Before you can move on to the trials, please answer the following questions.
+These questions are meant to ensure that you understand the decision-setting
+and payoff structure in this experiment.
+</p>
+
+<p>
+Please note that if you answer a question incorrectly, you will be asked to correct your answer.
+You will not be able to advance unless all answers are correct.
+</p>
+
+<hr>
+
+{{ formfields }}
+
+<hr>
+
+<h4>Instructions Reminder</h4>
+
+<p>
+Each group member receives {{ C.MEMBER_ENDOWMENT }} tokens.
+For every token contributed to the Group Account, 1 token is deducted from
+the member’s Private Account.
+</p>
+
+<p>
+All contributions are multiplied by {{ C.MULTIPLIER }} and divided equally
+among the four group members.
+</p>
+
+<p>
+The leader receives a fixed payment of {{ C.LEADER_FIXED_PAYMENT }} tokens.
+</p>
+
+{{ next_button }}
+
+{% endblock %}

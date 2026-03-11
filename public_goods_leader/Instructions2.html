@@ -1,0 +1,18 @@
+{{ extends "global/Page.html" }}
+{{ block title }}Group Assignment{{ endblock }}
+
+{{ block content }}
+
+
+<p>You will be randomly and anonymously assigned to a group of {{ C.PLAYERS_PER_GROUP }} participants.</p>
+    
+<p>In each group, there are two types of participants: 1 Leader and {{ C.NUM_MEMBERS }} Group Members.</p>
+
+<p>The assignment of role is random. You will learn your role after reading the instructions.</p>
+
+<p>All {{ C.PLAYERS_PER_GROUP }} participants in each group will receive the same instructions.</p>
+
+{{ next_button }}
+
+
+{{ endblock }}

@@ -1,0 +1,17 @@
+{{ extends "global/Page.html" }}
+{{ block title }}Results{{ endblock }}
+
+{{ block content }}
+
+<p><b>Total group contribution:</b> {{ total_contribution }} tokens</p>
+<p><b>Multiplied pot:</b> {{ shared_pot }} points</p>
+
+{{ if is_leader }}
+    {{ include_sibling 'leader_results.html' }}
+{{ else }}
+    {{ include_sibling 'member_results.html' }}
+{{ endif }}
+
+<p><strong>Your total payoff: {{ payoff }} points</strong></p>
+
+{{ endblock }}

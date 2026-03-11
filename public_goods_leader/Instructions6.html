@@ -1,0 +1,20 @@
+{{ extends "global/Page.html" }}
+{{ block title }}Leader{{ endblock }}
+
+{{ block content }}
+
+
+<p><b>Leader:</b></p>
+
+<p>The leader's task is to send a recommendation at the start of each round, suggesting how many tokens each group member should contribute to the group account.</p>
+
+<p>Group members are free to follow or ignore this recommendation.</p>
+
+<p>The leader will not make a contributing decision to the group account and instead will receive {{ C.LEADER_FIXED_PAYMENT }} tokens each round, independent of the contribution to the group account.</p>
+
+<p>Leader payments do not come out of the group account.</p>
+
+{{ next_button }}
+
+
+{{ endblock }}

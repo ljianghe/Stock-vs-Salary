@@ -1,0 +1,35 @@
+{{ extends "global/Page.html" }}
+{{ block title }}Comprehension Questions{{ endblock }}
+
+{{ block content }}
+
+<p>
+Before moving to the decision stage, please answer the following questions.
+You must answer all questions correctly to continue.
+</p>
+
+<hr>
+
+{{ formfields }}
+
+<hr>
+
+<h4>Reminder of the Rules</h4>
+
+<p>
+Each group member receives {{ C.MEMBER_ENDOWMENT }} tokens.
+Each contributed token reduces the private account by 1 token.
+</p>
+
+<p>
+Total contributions are multiplied by {{ C.MULTIPLIER }}
+and divided equally among the 4 members.
+</p>
+
+<p>
+The leader receives 50% of total contributions.
+</p>
+
+{{ next_button }}
+
+{{ endblock }}

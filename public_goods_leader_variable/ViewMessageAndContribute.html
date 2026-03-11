@@ -1,0 +1,18 @@
+{{ extends "global/Page.html" }}
+{{ block title }}Message from Leader and Your Contribution Decision{{ endblock }}
+
+{{ block content }}
+
+<p><b>Message from your Leader:</b></p>
+<p><i>{{ leader_message }}</i></p>
+
+<hr>
+
+<p>You have <b>{{ C.MEMBER_ENDOWMENT }} tokens</b>. How much would you like to contribute to the group account?</p>
+<p>Remember: All contributions will be multiplied by {{ C.MULTIPLIER }} and shared equally among the {{ C.NUM_MEMBERS }} group members.</p>
+
+{{ formfields }}
+
+{{ next_button }}
+
+{{ endblock }}

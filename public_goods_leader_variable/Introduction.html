@@ -1,0 +1,14 @@
+{{ extends "global/Page.html" }}
+{{ block title }}Welcome to the Public Goods Game{{ endblock }}
+
+{{ block content }}
+
+{{ if is_leader }}
+  {{ include_sibling 'leader_intro.html' }}
+{{ else }}
+  {{ include_sibling 'member_intro.html' }}
+{{ endif }}
+
+{{ next_button }}
+
+{{ endblock }}

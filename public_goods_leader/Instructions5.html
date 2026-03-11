@@ -1,0 +1,19 @@
+{{ extends "global/Page.html" }}
+{{ block title }}Accounts{{ endblock }}
+
+{{ block content }}
+
+
+<p><b>Group Account:</b></p>
+
+<p>Tokens contributed to the group account are summed up to a total amount. This total amount is multiplied by {{ C.MULTIPLIER }} (by the experimenter) and then is evenly split among all {{ C.NUM_MEMBERS }} group members.</p>
+
+<p><b>Private Account:</b></p>
+
+<p>Each member earns the tokens remaining in their Private Account after any allocations to the Group Account.
+    These tokens are not multiplied.</p>
+
+{{ next_button }}
+
+
+{{ endblock }}
