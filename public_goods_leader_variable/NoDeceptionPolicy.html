@@ -1,0 +1,55 @@
+{{ block title }}
+    No-Deception Policy
+{{ endblock }}
+
+{{ block content }}
+
+<style>
+    .instructions-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .dotted-line {
+        border-top: 1px dotted #ccc;
+        margin: 20px 0;
+    }
+    .card {
+        background-color: #f8f9fa;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .button-container {
+        text-align: right;
+    }
+    .btn-primary {
+        background-color: #007bff;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 5px;
+        color: #ffffff;
+        cursor: pointer;
+    }
+</style>
+
+<hr style="border-top: dotted 1px; background-color: transparent;" />
+
+<div class="card">
+
+    <p>
+        The experiment is conducted by researchers associated with the Interdisciplinary Experimental Laboratory (IELab) at Indiana University and follows <b>strict no deception policy</b>.
+    </p>
+    <p>
+        <b>In accordance with IELab rules, whatever we tell you is indeed true.</b> For example, if we tell you that something
+        will happen if you choose a given option, then that thing will happen if you choose that option. Anything else would
+        violate IELab policies.
+        For more information on this policy, see <i><a href="https://ie.lab.indiana.edu/conducting-experiments/index.html" target="_blank">https://ie.lab.indiana.edu/conducting-experiments</a></i>
+    </p>
+
+</div>
+
+{{ next_button label='>>' }}
+
+{{ endblock }}

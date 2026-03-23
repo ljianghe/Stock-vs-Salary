@@ -1,0 +1,22 @@
+{{ extends "global/Page.html" }}
+{{ block title }}Completion{{ endblock }}
+
+{{ block content }}
+
+<p>Thank you for participating in this study!</p>
+
+<p>
+    Please click the link below to complete your submission on Prolific:
+</p>
+
+<p>
+    <a href="{{ prolific_url }}" target="_blank">
+        Complete on Prolific
+    </a>
+</p>
+
+<p>
+    Your completion code is: <strong>{{ completion_code }}</strong>
+</p>
+
+{{ endblock }}

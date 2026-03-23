@@ -1,0 +1,55 @@
+{{ block content }}
+
+<div class="card">
+    <div class="card-body">
+        <h3>Welcome to the Study</h3>
+
+        <p>Thank you for participating in this research study, which will take about <b>10 minutes</b>.</p>
+
+        <p>Before we begin, please enter your Prolific ID below. This is required to ensure you receive payment for your participation.</p>
+
+        {{ formfields }}
+
+        <div class="info-card">
+            <p> <b> Your Payment: </b> </p>
+            <p>Upon completing the study, you will receive a <b>$2.5</b> participation payment.
+                In addition, there is a 25% chance you will be randomly selected to receive a <b>bonus</b> from the study.
+                If you are chosen for a bonus, then points received will be converted to dollars at a rate of <i> 25 cents per point</i>.
+                If selected, your bonus amount will be determined based on the procedures described later in the study and will be paid no later than December 24th.
+                </p>
+        </div>
+<!--        Your total payment, which includes both the participation fee and any bonus earned,-->
+<!--                will be distributed within one week of completing the study.-->
+
+        {{ next_button }}
+    </div>
+</div>
+
+<style>
+    .card {
+        margin-top: 30px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+
+    .card-body {
+        padding: 30px;
+    }
+
+    .info-card {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 5px;
+        border-left: 4px solid #007bff;
+        margin-bottom: 25px;
+    }
+
+    .info-card ul {
+        margin-bottom: 15px;
+    }
+
+    .info-card li {
+        margin-bottom: 10px;
+    }
+</style>
+
+{{ endblock }}

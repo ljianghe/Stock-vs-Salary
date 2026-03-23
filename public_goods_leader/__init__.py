@@ -45,6 +45,15 @@ class Group(BaseGroup):
     individual_share = models.CurrencyField()
 class Player(BasePlayer):
 
+    prolific_id = models.StringField(label="Please enter your Prolific ID")
+
+    contribution = models.IntegerField(
+        initial=0,
+        label='How much will you contribute to the group account?',
+        max=C.MEMBER_ENDOWMENT,
+        min=0
+    )
+
     contribution = models.IntegerField(
         initial=0,
         label='How much will you contribute to the group account?',
@@ -209,4 +218,26 @@ class TrustRating(Page):
     form_model = 'player'
     form_fields = ['trust_leader', 'trust_members']
 
-page_sequence = [Instructions, Instructions2, Instructions3, Instructions4, Instructions5, Instructions6, Comprehension, Introduction, LeaderMessage, WaitForLeader, ViewMessageAndContribute, WaitForContributions, Results, TrustRating]
+class Completion(Page):
+    @staticmethod
+    def vars_for_template(player: Player):
+        completion_code = 'CAHCFER6'  # CHANGE THIS
+        prolific_completion_url = f'https://app.prolific.co/submissions/complete?cc={completion_code}'
+
+        return dict(
+            prolific_url=prolific_completion_url,
+            completion_code=completion_code
+        )
+
+class ProlificID(Page):
+    form_model = 'player'
+    form_fields = ['prolific_id']
+
+    @staticmethod
+    def before_next_page(player: Player, timeout_happened):
+        player.participant.prolific_id = player.prolific_id
+
+class NoDeceptionPolicy(Page):
+    pass
+
+page_sequence = [ProlificID, NoDeceptionPolicy, Instructions, Instructions2, Instructions3, Instructions4, Instructions5, Instructions6, Comprehension, Introduction, LeaderMessage, WaitForLeader, ViewMessageAndContribute, WaitForContributions, Results, TrustRating, Completion]
