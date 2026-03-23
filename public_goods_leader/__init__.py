@@ -54,12 +54,6 @@ class Player(BasePlayer):
         min=0
     )
 
-    contribution = models.IntegerField(
-        initial=0,
-        label='How much will you contribute to the group account?',
-        max=C.MEMBER_ENDOWMENT,
-        min=0
-    )
 
     leader_message = models.LongStringField(
         label='Your message to the group members (you have 2 minutes)'
