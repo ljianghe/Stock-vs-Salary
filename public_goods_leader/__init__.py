@@ -68,7 +68,7 @@ class Player(BasePlayer):
     )
 
     comp_q2 = models.IntegerField(
-        label="2. If all group members contribute 10 tokens each to the Group Account, each group member earns tokens:",
+        label="2. If all group members contribute 10 tokens each to the Group Account, each group member earns ___ tokens:",
         min=0,
         max=100
     )
