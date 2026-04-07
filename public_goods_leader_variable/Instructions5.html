@@ -1,18 +1,69 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Accounts{{ endblock }}
+
+{{ block title }}
+    Accounts
+{{ endblock }}
 
 {{ block content }}
 
+<style>
+    .instructions-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .dotted-line {
+        border-top: 1px dotted #ccc;
+        margin: 20px 0;
+    }
+    .card {
+        background-color: #f8f9fa;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .section-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+</style>
 
-<p><b>Group Account:</b></p>
+<hr class="dotted-line" />
 
-<p>Tokens contributed to the group account are summed up to a total amount. This total amount is multiplied by {{ C.MULTIPLIER }} (by the experimenter) and then is evenly split among all {{ C.NUM_MEMBERS }} group members.</p>
+<div class="instructions-container">
 
-<p><b>Private Account:</b></p>
+    <div class="card">
 
-<p>Tokens kept in the private account remain with the member and are not multiplied.</p>
+        <p class="section-title">Group Account</p>
 
-{{ next_button }}
+        <p>
+            Tokens contributed to the Group Account are added together to form a total amount.
+        </p>
 
+        <p>
+            This total is multiplied by <strong>{{ C.MULTIPLIER }}</strong> and then evenly split among all
+            <strong>{{ C.NUM_MEMBERS }}</strong> group members.
+        </p>
+
+    </div>
+
+    <div class="card">
+
+        <p class="section-title">Private Account</p>
+
+        <p>
+            Each member keeps the tokens remaining in their Private Account after contributing to the Group Account.
+        </p>
+
+        <p>
+            These tokens are <strong>not multiplied</strong>.
+        </p>
+
+    </div>
+
+</div>
+
+{{ next_button label='>>' }}
 
 {{ endblock }}

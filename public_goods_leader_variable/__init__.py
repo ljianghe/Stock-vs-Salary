@@ -98,6 +98,16 @@ class Player(BasePlayer):
         ],
         widget=widgets.RadioSelect
     )
+    trust_leader = models.IntegerField(
+        label="How much do you trust the Leader in this group?",
+        min=0,
+        max=10
+    )
+    trust_members = models.IntegerField(
+        label="How much do you trust the other Members in this group?",
+        min=0,
+        max=10
+    )
 # the below function(s) are user-defined, not called by oTree
 # <helper-functions>
 def calculate_payoffs(group: Group):
@@ -231,4 +241,56 @@ class ProlificID(Page):
 class NoDeceptionPolicy(Page):
     pass
 
-page_sequence = [ProlificID, NoDeceptionPolicy, Instructions, Instructions2, Instructions3, Instructions4, Instructions5, Instructions6, Comprehension, Introduction, LeaderMessage, WaitForLeader, ViewMessageAndContribute, WaitForContributions, Results, TrustRating, Completion]
+class Examples(Page):
+    form_model = 'player'
+
+    @staticmethod
+    def vars_for_template(player: Player):
+
+        # Single example for leader (clean, fixed-style)
+        leader_example = dict(
+            total=20,
+            leader_payoff=10  # half of total (before multiplication)
+        )
+
+        # Group member examples (same as before)
+        examples = [
+            dict(
+                num=1,
+                your_contribution=4,
+                others=[3, 5, 8],
+                total=20,
+                multiplied=36,
+                share=9,
+                kept=6,
+                payoff=15
+            ),
+            dict(
+                num=2,
+                your_contribution=10,
+                others=[0, 0, 0],
+                total=10,
+                multiplied=18,
+                share=4.5,
+                kept=0,
+                payoff=4.5
+            ),
+            dict(
+                num=3,
+                your_contribution=0,
+                others=[6, 6, 6],
+                total=18,
+                multiplied=32.4,
+                share=8.1,
+                kept=10,
+                payoff=18.1
+            ),
+        ]
+
+        return dict(
+            leader_example=leader_example,
+            examples=examples
+        )
+
+
+page_sequence = [ProlificID, NoDeceptionPolicy, Instructions, Instructions2, Instructions3, Instructions4, Instructions5, Instructions6, Examples, Comprehension, Introduction, LeaderMessage, WaitForLeader, ViewMessageAndContribute, WaitForContributions, Results, TrustRating, Completion]

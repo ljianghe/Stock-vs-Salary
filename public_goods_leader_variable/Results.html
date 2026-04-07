@@ -1,18 +1,25 @@
+{% extends "global/Page.html" %}
+{% block content %}
+
 <p><b>Total group contribution:</b> {{ total_contribution }} tokens</p>
 <p><b>Multiplied pot:</b> {{ shared_pot }} tokens</p>
 
 <hr>
 
-{{ if is_leader }}
+{% if is_leader %}
 
     <p>You receive 50% of total contributions.</p>
 
-{{ else }}
+{% else %}
 
     <p><b>Share per member:</b> {{ individual_share }} tokens</p>
     <p>Your contribution: {{ player.contribution }} tokens</p>
     <p>Tokens kept: {{ tokens_kept }} tokens</p>
 
-{{ endif }}
+{% endif %}
 
 <p><strong>Your total earnings: {{ payoff }} tokens</strong></p>
+
+{{ next_button }}
+
+{% endblock %}

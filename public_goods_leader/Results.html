@@ -1,17 +1,61 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Results{{ endblock }}
+
+{{ block title }}
+Results
+{{ endblock }}
 
 {{ block content }}
 
-<p><b>Total group contribution:</b> {{ total_contribution }} tokens</p>
-<p><b>Multiplied pot:</b> {{ shared_pot }} points</p>
+<style>
+.instructions-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.dotted-line {
+    border-top: 1px dotted #ccc;
+    margin: 20px 0;
+}
+.card {
+    background-color: #f8f9fa;
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    line-height: 1.6;
+    font-size: 16px;
+}
+.section-title {
+    font-weight: bold;
+    margin-top: 10px;
+}
+.payoff {
+    font-size: 20px;
+    color: #2e7d32;
+    margin-top: 15px;
+}
+</style>
 
-{{ if is_leader }}
-    {{ include_sibling 'leader_results.html' }}
-{{ else }}
-    {{ include_sibling 'member_results.html' }}
-{{ endif }}
+<hr class="dotted-line" />
 
-<p><strong>Your total payoff: {{ payoff }} points</strong></p>
+<div class="instructions-container">
+    <div class="card">
+
+        <p class="section-title">Group Results</p>
+        <p><b>Total group contribution:</b> {{ total_contribution }} tokens</p>
+        <p><b>Multiplied pot:</b> {{ shared_pot }} points</p>
+
+        <hr>
+
+        {{ if is_leader }}
+            {{ include_sibling 'leader_results.html' }}
+        {{ else }}
+            {{ include_sibling 'member_results.html' }}
+        {{ endif }}
+
+        <p class="payoff"><strong>Your total payoff: {{ payoff }} points</strong></p>
+
+    </div>
+</div>
 
 {{ endblock }}

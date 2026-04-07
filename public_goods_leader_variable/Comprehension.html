@@ -1,35 +1,152 @@
-{{ extends "global/Page.html" }}
-{{ block title }}Comprehension Questions{{ endblock }}
+{% extends "global/Page.html" %}
 
-{{ block content }}
+{% block title %}
+    Comprehension Questions
+{% endblock %}
 
-<p>
-Before moving to the decision stage, please answer the following questions.
-You must answer all questions correctly to continue.
-</p>
+{% block content %}
 
-<hr>
+<style>
+.instructions-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.dotted-line {
+    border-top: 1px dotted #ccc;
+    margin: 20px 0;
+}
+.card {
+    background-color: #f8f9fa;
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+.section-title {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+</style>
 
-{{ formfields }}
+<hr class="dotted-line" />
 
-<hr>
+<div class="instructions-container">
 
-<h4>Reminder of the Rules</h4>
+    <!-- QUESTIONS FIRST -->
+    <div class="card">
+        <p class="section-title">Comprehension Questions</p>
 
-<p>
-Each group member receives {{ C.MEMBER_ENDOWMENT }} tokens.
-Each contributed token reduces the private account by 1 token.
-</p>
+        <p>
+        Please answer the following questions. You will not be able to continue
+        until all answers are correct.
+        </p>
 
-<p>
-Total contributions are multiplied by {{ C.MULTIPLIER }}
-and divided equally among the 4 members.
-</p>
+        {{ formfields }}
 
-<p>
-The leader receives 50% of total contributions.
-</p>
+    
+    </div>
 
-{{ next_button }}
+    <!-- ALL INSTRUCTIONS BELOW -->
 
-{{ endblock }}
+    <div class="card">
+        <p class="section-title">Group Assignment</p>
+
+        <p>
+            You will be randomly and anonymously assigned to a group of 
+            <strong>{{ C.PLAYERS_PER_GROUP }}</strong> participants.
+        </p>
+
+        <p>
+            Each group consists of <strong>1 Leader</strong> and 
+            <strong>{{ C.NUM_MEMBERS }} Group Members</strong>.
+        </p>
+
+        <p>
+            The assignment of roles is random.
+        </p>
+    </div>
+
+    <div class="card">
+        <p class="section-title">Group Members</p>
+
+        <p>
+            Each group member receives <strong>{{ C.MEMBER_ENDOWMENT }}</strong> tokens.
+        </p>
+
+        <p>
+            You decide how many tokens to allocate to the <strong>Group Account</strong>
+            and how many to keep in your <strong>Private Account</strong>.
+        </p>
+
+        <p>
+            You may contribute any whole number between 
+            <strong>0 and {{ C.MEMBER_ENDOWMENT }}</strong>.
+        </p>
+
+        <p>
+            All decisions are made privately.
+        </p>
+    </div>
+
+    <div class="card">
+        <p class="section-title">Accounts</p>
+
+        <p><strong>Group Account:</strong></p>
+        <p>
+            Contributions are added together, multiplied by 
+            <strong>{{ C.MULTIPLIER }}</strong>, and evenly split among all 
+            <strong>{{ C.NUM_MEMBERS }}</strong> group members.
+        </p>
+
+        <p><strong>Private Account:</strong></p>
+        <p>
+            Tokens you keep are not multiplied.
+        </p>
+    </div>
+
+    <div class="card">
+        <p class="section-title">Leader</p>
+
+        <p>
+            The leader sends a recommendation on how many tokens group members should contribute.
+        </p>
+
+        <p>
+            Group members may follow or ignore this recommendation.
+        </p>
+
+        <p>
+            The leader does not contribute and instead receives 
+            <strong>50% of the total contributions</strong>.
+        </p>
+
+        <p>
+            Leader payments do not reduce group members’ earnings.
+        </p>
+    </div>
+
+    <div class="card">
+        <p class="section-title">Payment</p>
+
+        <p>
+            Tokens earned will be converted into real money at the end.
+        </p>
+
+        <p>
+            <strong>1 token = ?</strong>
+        </p>
+
+        <p><strong>Your total payment equals:</strong></p>
+
+        <ul>
+            <li>Your earnings</li>
+            <li>A participation payment of <strong>?</strong></li>
+        </ul>
+    </div>
+
+</div>
+
+{{ next_button label='>>' }}
+
+{% endblock %}

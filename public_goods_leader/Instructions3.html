@@ -1,22 +1,57 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Payment Information{{ endblock }}
+
+{{ block title }}
+    Payment Information
+{{ endblock }}
 
 {{ block content }}
 
+<style>
+    .instructions-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .dotted-line {
+        border-top: 1px dotted #ccc;
+        margin: 20px 0;
+    }
+    .card {
+        background-color: #f8f9fa;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
 
-<p><b>At the end of the experiment:</b></p>
+<hr class="dotted-line" />
 
-<p>Tokens earned across all rounds will be converted into real money</p>
+<div class="instructions-container">
 
-<p>1 token = ?</p>
+    <div class="card">
 
-<p><b>Your total payment equals:</b></p>
-<ul>
-  <li>Your earnings from all rounds</li>
-  <li>Plus a guaranteed participation payment of ?</li>
-</ul>
+        <p><strong>At the end of the experiment:</strong></p>
 
-{{ next_button }}
+        <p>
+            Tokens earned across all rounds will be converted into real money.
+        </p>
 
+        <p>
+            <strong>1 token = ?</strong>
+        </p>
+
+        <p><strong>Your total payment equals:</strong></p>
+
+        <ul>
+            <li>Your earnings from all rounds</li>
+            <li>Plus a guaranteed participation payment of <strong>?</strong></li>
+        </ul>
+
+    </div>
+
+</div>
+
+{{ next_button label='>>' }}
 
 {{ endblock }}

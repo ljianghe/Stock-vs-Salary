@@ -1,17 +1,57 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Group Members{{ endblock }}
+
+{{ block title }}
+    Group Members
+{{ endblock }}
 
 {{ block content }}
 
-<p>Each group member will receive an endowment of {{ C.MEMBER_ENDOWMENT }} tokens at the start of each round.</p>
+<style>
+    .instructions-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .dotted-line {
+        border-top: 1px dotted #ccc;
+        margin: 20px 0;
+    }
+    .card {
+        background-color: #f8f9fa;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
 
-<p>Each group member is asked to decide how many tokens they want to contribute to the group account and how many tokens they want to contribute to their private account.</p>
+<hr class="dotted-line" />
 
-<p>The number of tokens needs to be a whole number.</p>
+<div class="instructions-container">
 
-<p>All decisions are made in private.</p>
+    <div class="card">
 
-{{ next_button }}
+        <p>
+            Each group member receives an endowment of <strong>{{ C.MEMBER_ENDOWMENT }}</strong> tokens.
+        </p>
 
+        <p>
+            Each group member must decide how many tokens to allocate to the <strong>Group Account</strong>
+            and how many tokens to keep in their <strong>Private Account</strong>.
+        </p>
+
+        <p>
+            The number of tokens must be a whole number between <strong>0 and {{ C.MEMBER_ENDOWMENT }}</strong>.
+        </p>
+
+        <p>
+            All decisions are made in private.
+        </p>
+
+    </div>
+
+</div>
+
+{{ next_button label='>>' }}
 
 {{ endblock }}

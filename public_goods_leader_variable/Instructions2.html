@@ -1,18 +1,54 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Group Assignment{{ endblock }}
+
+{{ block title }}
+    Group Assignment
+{{ endblock }}
 
 {{ block content }}
 
+<style>
+    .instructions-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .dotted-line {
+        border-top: 1px dotted #ccc;
+        margin: 20px 0;
+    }
+    .card {
+        background-color: #f8f9fa;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
 
-<p>You will be randomly and anonymously assigned to a group of {{ C.PLAYERS_PER_GROUP }} participants.</p>
-    
-<p>In each group, there are two types of participants: 1 Leader and {{ C.NUM_MEMBERS }} Group Members.</p>
+<hr class="dotted-line" />
 
-<p>The assignment of role is random. You will learn your role after reading the instructions.</p>
+<div class="instructions-container">
 
-<p>All {{ C.PLAYERS_PER_GROUP }} participants in each group will receive the same instructions.</p>
+    <div class="card">
+        <p>
+            You will be randomly and anonymously assigned to a group of <strong>{{ C.PLAYERS_PER_GROUP }}</strong> participants.
+        </p>
+        
+        <p>
+            In each group, there are two types of participants: <strong>1 Leader</strong> and <strong>{{ C.NUM_MEMBERS }} Group Members</strong>.
+        </p>
 
-{{ next_button }}
+        <p>
+            The assignment of roles is random. You will learn your role after reading the instructions.
+        </p>
 
+        <p>
+            All <strong>{{ C.PLAYERS_PER_GROUP }}</strong> participants in each group will receive the same instructions.
+        </p>
+    </div>
+
+</div>
+
+{{ next_button label='>>' }}
 
 {{ endblock }}

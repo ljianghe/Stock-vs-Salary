@@ -1,20 +1,68 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Leader{{ endblock }}
+
+{{ block title }}
+    Leader
+{{ endblock }}
 
 {{ block content }}
 
+<style>
+    .instructions-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .dotted-line {
+        border-top: 1px dotted #ccc;
+        margin: 20px 0;
+    }
+    .card {
+        background-color: #f8f9fa;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .section-title {
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+</style>
 
-<p><b>Leader:</b></p>
+<hr class="dotted-line" />
 
-<p>The leader's task is to send a recommendation at the start of each round, suggesting how many tokens each group member should contribute to the group account.</p>
+<div class="instructions-container">
 
-<p>Group members are free to follow or ignore this recommendation.</p>
+    <div class="card">
 
-<p>The leader will not make a contributing decision to the group account and instead will receive a payment of half of the total contributed group account.</p>
+        <p class="section-title">Leader</p>
 
-<p>Leader payments do not come out of the group account.</p>
+        <p>
+            The Leader sends a message at the start of each round, recommending how many tokens
+            group members should contribute to the Group Account.
+        </p>
 
-{{ next_button }}
+        <p>
+            Group members are free to follow or ignore this recommendation.
+        </p>
 
+        <p>
+            The Leader does not make a contribution decision.
+        </p>
+
+        <p>
+            The Leader receives <strong>{{ C.LEADER_FIXED_PAYMENT }} tokens in each round</strong>,
+            regardless of how much group members contribute to the Group Account.
+        </p>
+
+        <p>
+            This payment is <strong>not taken from the Group Account</strong>.
+        </p>
+
+    </div>
+
+</div>
+
+{{ next_button label='>>' }}
 
 {{ endblock }}

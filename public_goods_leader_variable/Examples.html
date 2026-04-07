@@ -1,0 +1,96 @@
+{{ extends "global/Page.html" }}
+
+{{ block title }}
+    Examples
+{{ endblock }}
+
+{{ block content }}
+
+<style>
+    .instructions-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .dotted-line {
+        border-top: 1px dotted #ccc;
+        margin: 20px 0;
+    }
+    .card {
+        background-color: #f8f9fa;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+    .section-title {
+        font-weight: bold;
+        margin-top: 10px;
+    }
+</style>
+
+<hr class="dotted-line" />
+
+<div class="instructions-container">
+
+    <div class="card">
+        <p>
+            The following examples illustrate how payoffs are calculated.
+        </p>
+    </div>
+
+    <div class="card">
+        <p class="section-title">Leader Payoffs</p>
+
+        <p><strong>Example:</strong></p>
+
+        <p>
+        Suppose group members contribute a total of <strong>20 tokens</strong> to the Group Account.
+        </p>
+
+        <p>
+        The leader receives half of the total contribution:
+        20 / 2 = <strong>10 tokens</strong>.
+        </p>
+
+        <p>
+        (Note: The leader’s payoff is based on total contributions before multiplication.)
+        </p>
+    </div>
+
+    <div class="card">
+        <p class="section-title">Group Member Payoffs</p>
+
+        {% for ex in examples %}
+        <p><strong>Example {{ ex.num }}:</strong></p>
+
+        <p>
+        You allocate {{ ex.your_contribution }} tokens and the other participants allocate
+        {{ ex.others.0 }}, {{ ex.others.1 }}, and {{ ex.others.2 }} tokens.
+        </p>
+
+        <p>
+        Total contribution:
+        {{ ex.your_contribution }} + {{ ex.others.0 }} +
+        {{ ex.others.1 }} + {{ ex.others.2 }} = {{ ex.total }} tokens
+        </p>
+
+        <p>
+        {{ ex.total }} × 1.8 = {{ ex.multiplied }} tokens,
+        so each member receives {{ ex.multiplied }} / 4 = {{ ex.share }} tokens
+        </p>
+
+        <p>
+        You keep {{ ex.kept }} tokens, so your total payoff is:
+        {{ ex.kept }} + {{ ex.share }} = <strong>{{ ex.payoff }} tokens</strong>
+        </p>
+
+        <div class="dotted-line"></div>
+        {% endfor %}
+    </div>
+
+</div>
+
+{{ next_button label='>>' }}
+
+{{ endblock }}

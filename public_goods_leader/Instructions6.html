@@ -1,20 +1,67 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Leader{{ endblock }}
+
+{{ block title }}
+Leader
+{{ endblock }}
 
 {{ block content }}
 
+<style>
+.instructions-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.dotted-line {
+    border-top: 1px dotted #ccc;
+    margin: 20px 0;
+}
+.card {
+    background-color: #f8f9fa;
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    line-height: 1.6;
+    font-size: 16px;
+}
+.card p {
+    margin-bottom: 12px;
+}
+.title {
+    font-size: 18px;
+    margin-bottom: 10px;
+}
+</style>
 
-<p><b>Leader:</b></p>
+<hr class="dotted-line" />
 
-<p>The leader's task is to send a recommendation at the start of each round, suggesting how many tokens each group member should contribute to the group account.</p>
+<div class="instructions-container">
+    <div class="card">
 
-<p>Group members are free to follow or ignore this recommendation.</p>
+        <p class="title"><b>Leader</b></p>
 
-<p>The leader will not make a contributing decision to the group account and instead will receive {{ C.LEADER_FIXED_PAYMENT }} tokens each round, independent of the contribution to the group account.</p>
+        <p>
+            The leader's task is to send a recommendation at the start of each round, 
+            suggesting how many tokens each group member should contribute to the group account.
+        </p>
 
-<p>Leader payments do not come out of the group account.</p>
+        <p>
+            Group members are free to follow or ignore this recommendation.
+        </p>
+
+        <p>
+            The leader will not make a contributing decision to the group account and instead 
+            will receive a payment of half of the total contributed group account.
+        </p>
+
+        <p>
+            Leader payments do not come out of the group account.
+        </p>
+
+    </div>
+</div>
 
 {{ next_button }}
-
 
 {{ endblock }}

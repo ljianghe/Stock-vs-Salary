@@ -1,11 +1,49 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Send Your Message{{ endblock }}
+
+{{ block title }}
+Send Your Message
+{{ endblock }}
 
 {{ block content }}
 
-<p>You have <b>{{ C.MESSAGE_TIME_SECONDS }} seconds</b> to write a message to motivate your group members to contribute.</p>
+<style>
+.instructions-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.dotted-line {
+    border-top: 1px dotted #ccc;
+    margin: 20px 0;
+}
+.card {
+    background-color: #f8f9fa;
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    line-height: 1.6;
+    font-size: 16px;
+}
+.highlight {
+    font-size: 17px;
+    margin-bottom: 15px;
+}
+</style>
 
-{{ formfields }}
+<hr class="dotted-line" />
+
+<div class="instructions-container">
+    <div class="card">
+
+        <p class="highlight">
+            You have <b>{{ C.MESSAGE_TIME_SECONDS }} seconds</b> to write a message to motivate your group members to contribute.
+        </p>
+
+        {{ formfields }}
+
+    </div>
+</div>
 
 {{ next_button }}
 
