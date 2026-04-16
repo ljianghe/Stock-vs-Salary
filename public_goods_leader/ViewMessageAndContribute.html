@@ -1,17 +1,110 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Message from Leader and Your Contribution Decision{{ endblock }}
+
+{{ block title }}
+Message from Leader and Your Contribution Decision
+{{ endblock }}
 
 {{ block content }}
 
-<p><b>Message from your Leader:</b></p>
-<p><i>{{ leader_message }}</i></p>
+<style>
+.instructions-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.dotted-line {
+    border-top: 1px dotted #ccc;
+    margin: 20px 0;
+}
+.card {
+    background-color: #f8f9fa;
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    line-height: 1.6;
+    font-size: 16px;
+}
+.message-box {
+    background-color: #ffffff;
+    border-left: 4px solid #007bff;
+    padding: 15px;
+    margin: 15px 0;
+    font-style: italic;
+}
+.warning-box {
+    background-color: #fff3f3;
+    border-left: 4px solid #d9534f;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    color: #a94442;
+    font-weight: bold;
+}
+</style>
 
-<hr>
+<hr class="dotted-line" />
 
-<p>You have <b>{{ C.MEMBER_ENDOWMENT }} tokens</b>. How much would you like to contribute to the group account?</p>
-<p>Remember: All contributions will be multiplied by {{ C.MULTIPLIER }} and shared equally among the {{ C.NUM_MEMBERS }} group members.</p>
+<div class="instructions-container">
 
-{{ formfields }}
+    {{ if member_left and not leader_left }}
+        {{ if active_member_count == 1 }}
+            <div class="warning-box" style="margin-bottom: 20px; background-color: #fff8e1; border-left: 4px solid #ff9800; color: #8b5a00;">
+                <strong>⚠️ All other group members have left the game.</strong><br>
+                You are the only remaining member. You will keep all your tokens and receive your share of any multiplied contributions.
+            </div>
+        {{ else }}
+            <div class="warning-box" style="margin-bottom: 20px;">
+                {{ if dropout_count == 1 }}
+                    <strong>⚠️ 1 group member has left the game.</strong><br>
+                    Your group has been reduced from {{ original_member_count }} to {{ active_member_count }} member{{ if active_member_count != 1 }}s{{ endif }}.
+                {{ else }}
+                    <strong>⚠️ {{ dropout_count }} group members have left the game.</strong><br>
+                    Your group has been reduced from {{ original_member_count }} to {{ active_member_count }} member{{ if active_member_count != 1 }}s{{ endif }}.
+                {{ endif }}
+            </div>
+        {{ endif }}
+    {{ endif }}
+
+    {{ if leader_left }}
+        <div class="warning-box" style="margin-bottom: 20px;">
+            <strong>⚠️ Your leader has left the game.</strong><br>
+            This was their last message:
+        </div>
+    {{ endif }}
+
+    <div class="card">
+
+        <p>
+            <b>
+                {{ if leader_left }}
+                    Last message from your Leader:
+                {{ else }}
+                    Message from your Leader:
+                {{ endif }}
+            </b>
+        </p>
+
+        <div class="message-box">
+            {{ leader_message }}
+        </div>
+
+        <hr>
+
+        <p>
+            You have <b>{{ C.MEMBER_ENDOWMENT }} tokens</b>.
+            How much would you like to contribute to the group account?
+        </p>
+
+        <p>
+            Remember: All contributions will be multiplied by <b>{{ C.MULTIPLIER }}</b>
+            and shared equally among the {{ active_member_count }} active group member{{ if active_member_count != 1 }}s{{ endif }}.
+        </p>
+
+        {{ formfields }}
+
+    </div>
+</div>
 
 {{ next_button }}
 

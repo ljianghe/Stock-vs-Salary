@@ -1,17 +1,84 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Results{{ endblock }}
+
+{{ block title }}
+Results
+{{ endblock }}
+
+{{ block timer_text }}
+Time left on this page
+{{ endblock }}
 
 {{ block content }}
 
-<p><b>Total group contribution:</b> {{ total_contribution }} tokens</p>
-<p><b>Multiplied pot:</b> {{ shared_pot }} points</p>
+<style>
+.instructions-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.dotted-line {
+    border-top: 1px dotted #ccc;
+    margin: 20px 0;
+}
+.card {
+    background-color: #f8f9fa;
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    line-height: 1.6;
+    font-size: 16px;
+}
+.section-title {
+    font-weight: bold;
+    margin-top: 10px;
+}
+.payoff {
+    font-size: 20px;
+    color: #2e7d32;
+    margin-top: 15px;
+}
+</style>
 
-{{ if is_leader }}
-    {{ include_sibling 'leader_results.html' }}
-{{ else }}
-    {{ include_sibling 'member_results.html' }}
-{{ endif }}
+<hr class="dotted-line" />
 
-<p><strong>Your total payoff: {{ payoff }} points</strong></p>
+<div class="instructions-container">
+    <div class="card">
+
+        <p class="section-title">Group Results</p>
+        
+        {{ if dropout_count > 0 }}
+            {{ if active_member_count == 1 }}
+                <div style="background-color: #fff8e1; border-left: 4px solid #ff9800; padding: 15px; margin: 15px 0; border-radius: 8px; color: #8b5a00;">
+                    <strong>⚠️ All other group members have left the game.</strong><br>
+                    You were the only member who contributed. Here is the amount you have earned:
+                </div>
+            {{ else }}
+                <div style="background-color: #fff3f3; border-left: 4px solid #d9534f; padding: 15px; margin: 15px 0; border-radius: 8px; color: #a94442;">
+                    <strong>⚠️ {{ dropout_count }} member{{ if dropout_count != 1 }}s{{ endif }} did not contribute (left the game).</strong><br>
+                    Your group was reduced from {{ original_member_count }} to {{ active_member_count }} active member{{ if active_member_count != 1 }}s{{ endif }}.<br>
+                    <em>The multiplied pot is divided only among the {{ active_member_count }} active member{{ if active_member_count != 1 }}s{{ endif }}.</em>
+                </div>
+            {{ endif }}
+        {{ endif }}
+        
+        <p><b>Total group contribution:</b> {{ total_contribution }} tokens (from {{ active_member_count }} active member{{ if active_member_count != 1 }}s{{ endif }})</p>
+        <p><b>Multiplied pot:</b> {{ shared_pot }}</p>
+        <p><b>Division:</b> {{ shared_pot }} ÷ {{ active_member_count }} active member{{ if active_member_count != 1 }}s{{ endif }} = {{ individual_share }} per member</p>
+
+        <hr>
+
+        {{ if is_leader }}
+            {{ include_sibling 'leader_results.html' }}
+        {{ else }}
+            {{ include_sibling 'member_results.html' }}
+        {{ endif }}
+
+        <p class="payoff">
+            <strong>Your total payoff: {{ payoff }}</strong>
+        </p>
+
+    </div>
+</div>
 
 {{ endblock }}

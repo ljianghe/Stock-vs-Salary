@@ -1,16 +1,60 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Welcome{{ endblock }}
+
+{{ block title }}
+    Welcome
+{{ endblock }}
 
 {{ block content }}
 
+<style>
+    .instructions-container {
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+    }
+    .dotted-line {
+        border-top: 1px dotted #ccc;
+        margin: 20px 0;
+    }
+    .card {
+        background-color: #f8f9fa;
+        margin: 20px 0;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+</style>
 
-<p>You are participating in an economic decision-making study.</p>
+<hr class="dotted-line" />
 
-<p>Your earnings in this study will depend on your decisions, on the decisions of others, and on chance.</p>
+<div class="instructions-container">
 
-<p>All decisions are anonymous. You will not learn the identity of any of the other participants, and they will not learn yours.</p>
+    <div class="card">
+        <p>
+            You are participating in an economic decision-making study.
+        </p>
 
-{{ next_button }}
+        <p>
+            Your earnings in this study will depend on your decisions, on the decisions of others, and on chance.
+        </p>
 
+        <p>
+            All decisions are anonymous. You will not learn the identity of any of the other participants, and they will not learn yours.
+        </p>
+
+        <hr>
+
+        <p>
+            You will now proceed to the instructions. Please read them carefully.
+        </p>
+
+        <p>
+            You will be required to complete a short comprehension quiz before beginning the experiment.
+        </p>
+    </div>
+
+</div>
+
+{{ next_button label='>>' }}
 
 {{ endblock }}

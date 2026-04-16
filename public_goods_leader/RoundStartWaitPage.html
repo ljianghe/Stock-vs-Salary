@@ -1,0 +1,67 @@
+{{ extends "global/Page.html" }}
+
+{{ block title }}
+Please Wait
+{{ endblock }}
+
+{{ block content }}
+
+<style>
+.page-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px;
+}
+.card {
+    background: #f8f9fa;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 32px;
+}
+.badge {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #eef4ff;
+    color: #2457a6;
+    font-weight: 700;
+}
+.title {
+    font-size: 26px;
+    font-weight: 700;
+}
+.message {
+    font-size: 18px;
+}
+</style>
+
+<div class="page-wrap">
+    <div class="card">
+        <div class="badge">Please wait</div>
+        <div class="title">Waiting for all group members</div>
+
+        <div class="message">
+            The page will continue automatically once all remaining group members are ready.
+        </div>
+
+        <div style="display:none;">
+            {{ next_button }}
+        </div>
+    </div>
+</div>
+
+<script>
+let advanced = false;
+
+function liveRecv(data) {
+    if (data.all_done && !advanced) {
+        advanced = true;
+        document.getElementById('form').submit();
+    }
+}
+
+setInterval(function() {
+    liveSend({});
+}, 1000);
+</script>
+
+{{ endblock }}

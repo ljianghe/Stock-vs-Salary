@@ -1,0 +1,112 @@
+{{ extends "global/Page.html" }}
+
+{{ block title }}
+Waiting for the Leader
+{{ endblock }}
+
+{{ block timer_text }}
+Time until leader's message period ends
+{{ endblock }}
+
+{{ block content }}
+
+<style>
+.page-wrap {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 24px;
+}
+.card {
+    background: #f8f9fa;
+    border-radius: 18px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+    padding: 32px;
+}
+.badge {
+    padding: 8px 14px;
+    border-radius: 999px;
+    background: #eef4ff;
+    color: #2457a6;
+    font-weight: 700;
+}
+.title {
+    font-size: 26px;
+    font-weight: 700;
+}
+.message {
+    font-size: 18px;
+}
+.warning-box {
+    background: #fff3f3;
+    border-left: 4px solid #d9534f;
+    padding: 14px;
+    border-radius: 10px;
+    color: #7a2d2d;
+}
+</style>
+
+<div class="page-wrap">
+    
+    {{ if member_left }}
+        <div class="warning-box" style="margin-bottom: 20px;">
+            {{ if dropout_count == 1 }}
+                <strong>⚠️ 1 group member has left the game.</strong><br>
+                Your group has been reduced from {{ original_member_count }} to {{ active_member_count }} member{{ if active_member_count != 1 }}s{{ endif }}.
+            {{ else }}
+                <strong>⚠️ {{ dropout_count }} group members have left the game.</strong><br>
+                Your group has been reduced from {{ original_member_count }} to {{ active_member_count }} member{{ if active_member_count != 1 }}s{{ endif }}.
+            {{ endif }}
+        </div>
+    {{ endif }}
+    
+    <div class="card">
+        <div class="badge">Please wait</div>
+        <div class="title">Waiting for the leader</div>
+
+        <div class="message">
+            The page will continue automatically once the leader has submitted their message.
+        </div>
+
+        <div id="notice"></div>
+
+        <div style="display:none;">
+            {{ next_button }}
+        </div>
+    </div>
+</div>
+
+<script>
+
+let advanced = false;
+let startTime = Date.now();
+const TIMEOUT_MS = 125000; // 125 seconds (5 seconds after page timeout)
+
+function liveRecv(data) {
+    if (data.notice) {
+        document.getElementById('notice').innerHTML =
+            '<div class="warning-box">' + data.notice + '</div>';
+    }
+
+    if (data.ready && !advanced) {
+        advanced = true;
+        document.getElementById('form').submit();
+    }
+}
+
+// Check for timeout and force advance
+function checkTimeout() {
+    if (!advanced && (Date.now() - startTime) > TIMEOUT_MS) {
+        console.log('Force advancing due to timeout');
+        advanced = true;
+        document.getElementById('form').submit();
+    }
+}
+
+// 🔁 Keep checking server
+setInterval(function() {
+    liveSend({});
+    checkTimeout();
+}, 1000);
+</script>
+
+{{ endblock }}
