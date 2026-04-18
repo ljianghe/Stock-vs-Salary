@@ -1,11 +1,82 @@
 {{ extends "global/Page.html" }}
-{{ block title }}Send Your Message{{ endblock }}
+
+{{ block title }}
+Send Your Message
+{{ endblock }}
 
 {{ block content }}
 
-<p>You have <b>{{ C.MESSAGE_TIME_SECONDS }} seconds</b> to write a message to motivate your group members to contribute.</p>
+<style>
+.instructions-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+}
+.dotted-line {
+    border-top: 1px dotted #ccc;
+    margin: 20px 0;
+}
+.card {
+    background-color: #f8f9fa;
+    margin: 20px 0;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    line-height: 1.6;
+    font-size: 16px;
+}
+.highlight {
+    font-size: 17px;
+    margin-bottom: 15px;
+}
+.warning-box {
+    background-color: #fff3f3;
+    border-left: 4px solid #d9534f;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    color: #a94442;
+    font-weight: bold;
+}
+</style>
 
-{{ formfields }}
+<hr class="dotted-line" />
+
+<div class="instructions-container">
+
+    {{ if member_left }}
+        {{ if active_member_count == 1 }}
+            <div class="warning-box" style="margin-bottom: 20px; background-color: #fff8e1; border-left: 4px solid #ff9800; color: #8b5a00;">
+                <strong>⚠️ All other group members have left the game.</strong><br>
+                Only 1 member remains in your group.
+            </div>
+        {{ else }}
+            <div class="warning-box" style="margin-bottom: 20px;">
+                {{ if dropout_count == 1 }}
+                    <strong>⚠️ 1 group member has left the game.</strong><br>
+                    Your group has been reduced from {{ original_member_count }} to {{ active_member_count }} members.
+                {{ else }}
+                    <strong>⚠️ {{ dropout_count }} group members have left the game.</strong><br>
+                    Your group has been reduced from {{ original_member_count }} to {{ active_member_count }} members.
+                {{ endif }}
+            </div>
+        {{ endif }}
+    {{ endif }}
+
+    <div class="card">
+
+        <p class="highlight">
+            You have <b>2 minutes</b> to write a message to motivate your group members to contribute.
+        </p>
+
+        <div class="warning-box">
+            You must submit a message within this time. Otherwise, you will be removed from the experiment.
+        </div>
+
+        {{ formfields }}
+
+    </div>
+</div>
 
 {{ next_button }}
 

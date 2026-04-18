@@ -32,14 +32,58 @@ Message from Leader and Your Contribution Decision
     margin: 15px 0;
     font-style: italic;
 }
+.warning-box {
+    background-color: #fff3f3;
+    border-left: 4px solid #d9534f;
+    padding: 15px;
+    margin: 15px 0;
+    border-radius: 8px;
+    color: #a94442;
+    font-weight: bold;
+}
 </style>
 
 <hr class="dotted-line" />
 
 <div class="instructions-container">
+
+    {{ if member_left and not leader_left }}
+        {{ if active_member_count == 1 }}
+            <div class="warning-box" style="margin-bottom: 20px; background-color: #fff8e1; border-left: 4px solid #ff9800; color: #8b5a00;">
+                <strong>⚠️ All other group members have left the game.</strong><br>
+                You are the only remaining member. You will keep all your tokens and receive your share of any multiplied contributions.
+            </div>
+        {{ else }}
+            <div class="warning-box" style="margin-bottom: 20px;">
+                {{ if dropout_count == 1 }}
+                    <strong>⚠️ 1 group member has left the game.</strong><br>
+                    Your group has been reduced from {{ original_member_count }} to {{ active_member_count }} member{{ if active_member_count != 1 }}s{{ endif }}.
+                {{ else }}
+                    <strong>⚠️ {{ dropout_count }} group members have left the game.</strong><br>
+                    Your group has been reduced from {{ original_member_count }} to {{ active_member_count }} member{{ if active_member_count != 1 }}s{{ endif }}.
+                {{ endif }}
+            </div>
+        {{ endif }}
+    {{ endif }}
+
+    {{ if leader_left }}
+        <div class="warning-box" style="margin-bottom: 20px;">
+            <strong>⚠️ Your leader has left the game.</strong><br>
+            This was their last message:
+        </div>
+    {{ endif }}
+
     <div class="card">
 
-        <p><b>Message from your Leader:</b></p>
+        <p>
+            <b>
+                {{ if leader_left }}
+                    Last message from your Leader:
+                {{ else }}
+                    Message from your Leader:
+                {{ endif }}
+            </b>
+        </p>
 
         <div class="message-box">
             {{ leader_message }}
@@ -48,13 +92,13 @@ Message from Leader and Your Contribution Decision
         <hr>
 
         <p>
-            You have <b>{{ C.MEMBER_ENDOWMENT }} tokens</b>. 
+            You have <b>{{ C.MEMBER_ENDOWMENT }} tokens</b>.
             How much would you like to contribute to the group account?
         </p>
 
         <p>
-            Remember: All contributions will be multiplied by <b>{{ C.MULTIPLIER }}</b> 
-            and shared equally among the {{ C.NUM_MEMBERS }} group members.
+            Remember: All contributions will be multiplied by <b>{{ C.MULTIPLIER }}</b>
+            and shared equally among the {{ active_member_count }} active group member{{ if active_member_count != 1 }}s{{ endif }}.
         </p>
 
         {{ formfields }}
