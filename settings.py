@@ -49,7 +49,12 @@ SESSION_FIELDS = [
 
 THOUSAND_SEPARATOR = ''
 AUTO_TABULATE_PAYOFFS = False
-ROOMS = []
+ROOMS = [
+    dict(
+        name='classroom',
+        display_name='Classroom Session',
+    ),
+]
 
 ADMIN_USERNAME = 'admin'
 ADMIN_PASSWORD = '1234'
