@@ -10,6 +10,8 @@ Time left on this page
 
 {{ block content }}
 
+<p style="text-align:center; color:#888; font-size:14px; margin-bottom:4px;">Round {{ player.round_number }} of {{ C.NUM_ROUNDS }}</p>
+
 <style>
 .instructions-container {
     max-width: 800px;
@@ -75,7 +77,11 @@ Time left on this page
         {{ endif }}
 
         <p class="payoff">
-            <strong>Your total payoff: {{ payoff }}</strong>
+            <strong>Your payoff this round: {{ payoff }}</strong>
+        </p>
+
+        <p class="payoff" style="font-size:22px; margin-top:8px;">
+            <strong>Your total current pot: {{ cumulative_pot }}</strong>
         </p>
 
     </div>

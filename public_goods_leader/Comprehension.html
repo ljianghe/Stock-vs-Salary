@@ -126,6 +126,7 @@
         </p>
     </div>
 
+    {% if session.config.name != 'combined_public_goods' %}
     <div class="card">
         <p class="section-title">Payment</p>
 
@@ -144,6 +145,7 @@
             <li>A participation payment of <strong>?</strong></li>
         </ul>
     </div>
+    {% endif %}
 
 </div>
 

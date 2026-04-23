@@ -7,6 +7,11 @@ SESSION_CONFIG_DEFAULTS = dict(
 
 SESSION_CONFIGS = [
     dict(
+        name='combined_public_goods',
+        num_demo_participants=5,
+        app_sequence=['public_goods_leader', 'public_goods_leader_variable'],
+    ),
+    dict(
         name='public_goods_leader',
         num_demo_participants=5,
         app_sequence=['public_goods_leader'],
@@ -31,6 +36,9 @@ PARTICIPANT_FIELDS = [
     'contrib_done',
     'trust_done',
     'round_ready',
+    'treatment',
+    'lobby_ready',
+    'group_incomplete',
 ]
 
 SESSION_FIELDS = [

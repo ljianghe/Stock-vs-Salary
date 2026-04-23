@@ -9,7 +9,8 @@ from otree.api import (
     WaitPage,   # 👈 ADD THIS
     Page,
 )
-import time 
+import time
+import random
 
 class C(BaseConstants):
     NAME_IN_URL = 'public_goods_leader'
@@ -43,7 +44,9 @@ class Group(BaseGroup):
 
 
 class Player(BasePlayer):
-    prolific_id = models.StringField(label="Please enter your Prolific ID")
+    prolific_id = models.StringField(label="Please enter your Prolific ID", blank=True)
+    player_name = models.StringField(label="Enter your name")
+    player_class = models.StringField(label="Enter your class")
 
     contribution = models.IntegerField(
         initial=0,
@@ -57,6 +60,7 @@ class Player(BasePlayer):
     )
 
     comp_attempts = models.IntegerField(initial=0)
+    comp_attempt_log = models.LongStringField(initial='[]')
 
     comp_q1 = models.IntegerField(
         label="1. Each token a group member contributes to the Group Account reduces their Private Account by how many tokens?",
@@ -101,6 +105,9 @@ class Player(BasePlayer):
         max=10,
     )
 
+    role_assignment = models.StringField()
+    treatment_group = models.StringField()
+
     still_here = models.StringField(
         label="✔ I'm still here",
         choices=[['yes', "Yes, I'm still here"]],
@@ -114,10 +121,25 @@ class Player(BasePlayer):
 
 def creating_session(subsession):
     if subsession.round_number == 1:
+        # Randomly assign treatment per group only in combined sessions
+        app_seq = subsession.session.config.get('app_sequence', [])
+        if 'public_goods_leader_variable' in app_seq:
+            for group in subsession.get_groups():
+                treatment = random.choice(['fixed', 'variable'])
+                for p in group.get_players():
+                    p.participant.treatment = treatment
+
         for player in subsession.get_players():
             player.participant.is_dropout = False
             player.participant.needs_dropout_notice = False
             player.participant.prolific_id = ''
+            player.participant.lobby_ready = False
+            player.participant.group_incomplete = False
+
+    # Set role and treatment fields for data export (after treatment assignment)
+    for player in subsession.get_players():
+        player.role_assignment = player.role()
+        player.treatment_group = getattr(player.participant, 'treatment', '')
     
     # Reset per-round flags for active players only
     for player in subsession.get_players():
@@ -238,65 +260,74 @@ def calculate_payoffs(group: Group):
             p.payoff = cu(C.MEMBER_ENDOWMENT - p.contribution) + group.individual_share
 
 
+def is_my_treatment(player):
+    """Returns True if this player should see pages in this app (fixed leader payment)."""
+    if getattr(player.participant, 'group_incomplete', False):
+        return False
+    t = getattr(player.participant, 'treatment', '')
+    return t != 'variable'
+
+
 class ProlificID(Page):
     form_model = 'player'
-    form_fields = ['prolific_id']
+    form_fields = ['player_name', 'player_class']
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
 
     @staticmethod
     def before_next_page(player, timeout_happened):
-        player.participant.prolific_id = player.prolific_id
+        player.participant.prolific_id = player.player_name
 
 
 class NoDeceptionPolicy(Page):
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
 
 
 class Instructions(Page):
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
 
 
 class Instructions2(Page):
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
 
 
 class Instructions3(Page):
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        is_combined = 'public_goods_leader_variable' in player.session.config.get('app_sequence', [])
+        return player.round_number == 1 and is_my_treatment(player) and not is_combined
 
 
 class Instructions4(Page):
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
 
 
 class Instructions5(Page):
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
 
 
 class Instructions6(Page):
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
 
 
 class Examples(Page):
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
 
     @staticmethod
     def vars_for_template(player):
@@ -372,10 +403,11 @@ class Comprehension(Page):
 
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
 
     @staticmethod
     def error_message(player, values):
+        import json
         wrong = {}
         if values['comp_q1'] != 1:
             wrong['comp_q1'] = "Incorrect. Each contributed token reduces the private account by 1."
@@ -388,28 +420,72 @@ class Comprehension(Page):
 
         if wrong:
             player.comp_attempts += 1
+            log = json.loads(player.comp_attempt_log or '[]')
+            log.append(dict(
+                attempt=player.comp_attempts,
+                q1=values['comp_q1'],
+                q2=values['comp_q2'],
+                q3=values['comp_q3'],
+                q4=values['comp_q4'],
+                wrong=list(wrong.keys()),
+            ))
+            player.comp_attempt_log = json.dumps(log)
             if player.comp_attempts < 3:
                 return {k: 'Incorrect. Please try again.' for k in wrong}
             return wrong
         return {}
 
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        player.participant.lobby_ready = True
 
-class ComprehensionWaitPage(WaitPage):
-    wait_for_all_groups = False
-    
+
+class ComprehensionWaitPage(Page):
+    timer_text = 'Time remaining to wait for group members:'
+
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
-    
+        return player.round_number == 1 and is_my_treatment(player)
+
     @staticmethod
-    def after_all_players_arrive(group):
-        pass
+    def get_timeout_seconds(player):
+        return 1200  # 20 minutes
+
+    @staticmethod
+    def live_method(player, data):
+        group = player.group
+        all_ready = all(p.participant.lobby_ready for p in group.get_players())
+        return {0: dict(all_done=all_ready)}
+
+    @staticmethod
+    def before_next_page(player, timeout_happened):
+        if timeout_happened:
+            group = player.group
+            all_ready = all(p.participant.lobby_ready for p in group.get_players())
+            if not all_ready:
+                for p in group.get_players():
+                    p.participant.group_incomplete = True
+
+
+class GroupIncomplete(Page):
+    @staticmethod
+    def is_displayed(player):
+        return player.round_number == 1 and getattr(player.participant, 'group_incomplete', False)
+
+    @staticmethod
+    def vars_for_template(player):
+        completion_code = 'CAHCFER6'
+        prolific_completion_url = f'https://app.prolific.co/submissions/complete?cc={completion_code}'
+        return dict(
+            completion_code=completion_code,
+            prolific_url=prolific_completion_url,
+        )
 
 
 class Introduction(Page):
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
 
     @staticmethod
     def vars_for_template(player):
@@ -421,7 +497,7 @@ class ReadyWaitPage(WaitPage):
     
     @staticmethod
     def is_displayed(player):
-        return player.round_number == 1
+        return player.round_number == 1 and is_my_treatment(player)
     
     @staticmethod
     def after_all_players_arrive(group):
@@ -435,7 +511,7 @@ class RoundStartWaitPage(Page):
 
     @staticmethod
     def is_displayed(player):
-        return not player.participant.is_dropout and not group_should_end(player)
+        return is_my_treatment(player) and not player.participant.is_dropout and not group_should_end(player)
 
     @staticmethod
     def get_timeout_seconds(player):
@@ -472,7 +548,8 @@ class LeaderMessage(Page):
     @staticmethod
     def is_displayed(player):
         return (
-            player.role() == C.LEADER_ROLE
+            is_my_treatment(player)
+            and player.role() == C.LEADER_ROLE
             and not player.participant.is_dropout
             and not group_should_end(player)
             and not player.session.leader_left
@@ -510,7 +587,8 @@ class WaitForLeader(Page):
     @staticmethod
     def is_displayed(player):
         return (
-            player.role() == C.MEMBER_ROLE
+            is_my_treatment(player)
+            and player.role() == C.MEMBER_ROLE
             and not player.participant.is_dropout
             and not group_should_end(player)
         )
@@ -581,7 +659,8 @@ class ViewMessageAndContribute(Page):
     @staticmethod
     def is_displayed(player):
         return (
-            player.role() == C.MEMBER_ROLE
+            is_my_treatment(player)
+            and player.role() == C.MEMBER_ROLE
             and not player.participant.is_dropout
             and not group_should_end(player)
         )
@@ -642,7 +721,7 @@ class WaitForContributions(Page):
 
     @staticmethod
     def is_displayed(player):
-        return not player.participant.is_dropout and not group_should_end(player)
+        return is_my_treatment(player) and not player.participant.is_dropout and not group_should_end(player)
 
     @staticmethod
     def get_timeout_seconds(player):
@@ -679,7 +758,7 @@ class ResultsWaitPage(Page):
 
     @staticmethod
     def is_displayed(player):
-        return not player.participant.is_dropout and not group_should_end(player)
+        return is_my_treatment(player) and not player.participant.is_dropout and not group_should_end(player)
 
     @staticmethod
     def get_timeout_seconds(player):
@@ -709,7 +788,7 @@ class Results(Page):
 
     @staticmethod
     def is_displayed(player):
-        return not player.participant.is_dropout and not group_should_end(player)
+        return is_my_treatment(player) and not player.participant.is_dropout and not group_should_end(player)
     
     @staticmethod
     def get_timeout_seconds(player):
@@ -725,6 +804,8 @@ class Results(Page):
         if player.group.field_maybe_none('total_contribution') is None:
             calculate_payoffs(player.group)
         
+        cumulative_pot = sum([p.payoff for p in player.in_all_rounds()[:player.round_number]])
+
         return dict(
             total_contribution=player.group.total_contribution,
             shared_pot=player.group.shared_pot,
@@ -732,6 +813,7 @@ class Results(Page):
             is_leader=player.role() == C.LEADER_ROLE,
             tokens_kept=C.MEMBER_ENDOWMENT - player.contribution,
             payoff=player.payoff,
+            cumulative_pot=cumulative_pot,
             dropout_notice=get_dropout_notice(player),
             active_member_count=len(active_members),
             dropout_count=dropout_count,
@@ -749,7 +831,8 @@ class LeaderTrustRating(Page):
     @staticmethod
     def is_displayed(player):
         return (
-            player.role() == C.LEADER_ROLE
+            is_my_treatment(player)
+            and player.role() == C.LEADER_ROLE
             and not player.participant.is_dropout
             and not group_should_end(player)
         )
@@ -794,7 +877,8 @@ class MemberTrustRating(Page):
     @staticmethod
     def is_displayed(player):
         return (
-            player.role() == C.MEMBER_ROLE
+            is_my_treatment(player)
+            and player.role() == C.MEMBER_ROLE
             and not player.participant.is_dropout
             and not group_should_end(player)
         )
@@ -839,7 +923,7 @@ class TrustRatingsWaitPage(Page):
 
     @staticmethod
     def is_displayed(player):
-        return not player.participant.is_dropout and not group_should_end(player)
+        return is_my_treatment(player) and not player.participant.is_dropout and not group_should_end(player)
 
     @staticmethod
     def get_timeout_seconds(player):
@@ -864,7 +948,8 @@ class Completion(Page):
     @staticmethod
     def is_displayed(player):
         return (
-            player.round_number == C.NUM_ROUNDS
+            is_my_treatment(player)
+            and player.round_number == C.NUM_ROUNDS
             and not player.participant.is_dropout
             and not group_should_end(player)
         )
@@ -883,7 +968,7 @@ class Completion(Page):
 class ExitNotice(Page):
     @staticmethod
     def is_displayed(player):
-        return player.participant.is_dropout or group_should_end(player)
+        return is_my_treatment(player) and (player.participant.is_dropout or group_should_end(player))
 
     @staticmethod
     def vars_for_template(player):
@@ -920,6 +1005,7 @@ page_sequence = [
     Examples,
     Comprehension,
     ComprehensionWaitPage,
+    GroupIncomplete,
     Introduction,
     ReadyWaitPage,
     RoundStartWaitPage,

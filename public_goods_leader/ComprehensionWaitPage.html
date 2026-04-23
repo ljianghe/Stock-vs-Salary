@@ -1,12 +1,10 @@
 {{ extends "global/Page.html" }}
 
 {{ block title }}
-Waiting for Trust Ratings
+Please Wait
 {{ endblock }}
 
 {{ block content }}
-
-<p style="text-align:center; color:#888; font-size:14px; margin-bottom:4px;">Round {{ player.round_number }} of {{ C.NUM_ROUNDS }}</p>
 
 <style>
 .page-wrap {
@@ -21,28 +19,47 @@ Waiting for Trust Ratings
     padding: 32px;
 }
 .badge {
+    display: inline-block;
     padding: 8px 14px;
     border-radius: 999px;
     background: #eef4ff;
     color: #2457a6;
     font-weight: 700;
+    margin-bottom: 18px;
 }
 .title {
     font-size: 26px;
     font-weight: 700;
+    margin-bottom: 12px;
 }
 .message {
     font-size: 18px;
+    line-height: 1.7;
+    color: #333;
+}
+.note {
+    background: #fffbea;
+    border-left: 4px solid #f0ad4e;
+    padding: 14px 16px;
+    border-radius: 10px;
+    color: #856404;
+    margin-top: 18px;
+    font-size: 15px;
 }
 </style>
 
 <div class="page-wrap">
     <div class="card">
         <div class="badge">Please wait</div>
-        <div class="title">Waiting for trust ratings</div>
+        <div class="title">Waiting for all group members to finish the quiz</div>
 
         <div class="message">
-            The page will continue automatically once all remaining participants have submitted their ratings.
+            The experiment will begin once all members of your group have completed the comprehension questions.
+            This page will advance automatically.
+        </div>
+
+        <div class="note">
+            If not all group members arrive within the time limit, you will receive your completion credit and the experiment will end.
         </div>
 
         <div style="display:none;">
@@ -63,7 +80,7 @@ function liveRecv(data) {
 
 setInterval(function() {
     liveSend({});
-}, 1000);
+}, 2000);
 </script>
 
 {{ endblock }}

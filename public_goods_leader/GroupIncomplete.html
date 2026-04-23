@@ -1,7 +1,7 @@
 {{ extends "global/Page.html" }}
 
 {{ block title }}
-Exit
+Session Ended
 {{ endblock }}
 
 {{ block content }}
@@ -52,14 +52,15 @@ Exit
 <div class="page-wrap">
     <div class="card">
         <div class="badge">Session ended</div>
-        <div class="title">{{ exit_title }}</div>
+        <div class="title">Not enough players joined in time</div>
 
         <div class="message">
-            {{ exit_message }}
+            Unfortunately, not all members of your group joined within the waiting period.
+            The experiment cannot proceed without a full group.
         </div>
 
         <div class="note">
-            {{ exit_note }}
+            This is not your fault. Thank you for your patience. You will still receive credit for your time.
         </div>
 
         {% if session.config.name != 'combined_public_goods' %}
