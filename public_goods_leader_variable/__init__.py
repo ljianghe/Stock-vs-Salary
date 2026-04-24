@@ -106,6 +106,24 @@ class Player(BasePlayer):
         max=10,
     )
 
+    survey_leader_pay_influence = models.IntegerField(
+        label="To what extent do you think the leader's recommendations were influenced by how they were paid?",
+        min=0,
+        max=10,
+    )
+    survey_leader_affect_choices = models.IntegerField(
+        label="Overall, to what extent do you think the leader's recommendations affected your choices?",
+        min=0,
+        max=10,
+    )
+    survey_reason = models.LongStringField(
+        label="What was your main reason for following or not following the leader's recommendations?",
+    )
+    survey_comments = models.LongStringField(
+        label="Any other comments?",
+        blank=True,
+    )
+
     role_assignment = models.StringField()
     treatment_group = models.StringField()
 
@@ -931,6 +949,20 @@ class TrustRatingsWaitPage(Page):
         return {0: dict(all_done=all_done)}
 
 
+class Survey(Page):
+    form_model = 'player'
+    form_fields = ['survey_leader_pay_influence', 'survey_leader_affect_choices', 'survey_reason', 'survey_comments']
+
+    @staticmethod
+    def is_displayed(player):
+        return (
+            is_my_treatment(player)
+            and player.round_number == C.NUM_ROUNDS
+            and not player.participant.is_dropout
+            and not group_should_end(player)
+        )
+
+
 class Completion(Page):
     @staticmethod
     def is_displayed(player):
@@ -1005,5 +1037,6 @@ page_sequence = [
     MemberTrustRating,
     TrustRatingsWaitPage,
     ExitNotice,
+    Survey,
     Completion,
 ]

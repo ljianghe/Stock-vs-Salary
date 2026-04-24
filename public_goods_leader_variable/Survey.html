@@ -1,0 +1,50 @@
+{{ block title }}
+End-of-Experiment Survey
+{{ endblock }}
+
+{{ block content }}
+
+<style>
+.survey-section {
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 24px;
+    margin-bottom: 20px;
+    border: 1px solid #e9ecef;
+}
+.survey-section label {
+    font-size: 16px;
+    font-weight: 600;
+    margin-bottom: 10px;
+    display: block;
+}
+.scale-hint {
+    font-size: 13px;
+    color: #666;
+    margin-bottom: 8px;
+}
+</style>
+
+<p>Please answer the following questions about your experience in this experiment.</p>
+
+<div class="survey-section">
+    {{ formfield 'survey_leader_pay_influence' }}
+    <div class="scale-hint">0 = Not at all &nbsp;&nbsp;|&nbsp;&nbsp; 10 = Very much</div>
+</div>
+
+<div class="survey-section">
+    {{ formfield 'survey_leader_affect_choices' }}
+    <div class="scale-hint">0 = Not at all &nbsp;&nbsp;|&nbsp;&nbsp; 10 = Very much</div>
+</div>
+
+<div class="survey-section">
+    {{ formfield 'survey_reason' }}
+</div>
+
+<div class="survey-section">
+    {{ formfield 'survey_comments' }}
+</div>
+
+{{ next_button }}
+
+{{ endblock }}
