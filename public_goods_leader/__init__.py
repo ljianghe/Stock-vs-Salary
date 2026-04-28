@@ -663,12 +663,16 @@ class WaitForLeader(Page):
     def before_next_page(player, timeout_happened):
         player.participant.contrib_done = False
 
-        if timeout_happened:
-            mark_dropout(player)
         leader = player.group.get_player_by_role(C.LEADER_ROLE)
         leader_msg = leader.field_maybe_none('leader_message')
-        if not leader.participant.is_dropout and not leader_msg:
-            mark_dropout(leader)
+
+        if timeout_happened:
+            # If the leader hasn't submitted a message, mark the LEADER as dropout, not the member
+            if not leader.participant.is_dropout and (not leader_msg or leader_msg == ''):
+                mark_dropout(leader)
+            else:
+                # Leader did submit but member still timed out — mark member as dropout
+                mark_dropout(player)
 
 class ViewMessageAndContribute(Page):
     form_model = 'player'
@@ -1039,7 +1043,6 @@ page_sequence = [
     ComprehensionWaitPage,
     GroupIncomplete,
     Introduction,
-    ReadyWaitPage,
     RoundStartWaitPage,
     LeaderMessage,
     WaitForLeader,
