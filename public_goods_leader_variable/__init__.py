@@ -417,7 +417,7 @@ class Comprehension(Page):
         if values['comp_q1'] != 1:
             wrong['comp_q1'] = "Incorrect. Each contributed token reduces the private account by 1."
         if values['comp_q2'] != 18:
-            wrong['comp_q2'] = "Incorrect. Multiply total contributions by 1.8 and divide equally."
+            wrong['comp_q2'] = "Incorrect. Multiply total contributions by 1.8 and divide equally amongst all group members (Reminder: there are four group members)."
         if values['comp_q3'] != 'c':
             wrong['comp_q3'] = "Incorrect. Contributions increase earnings for everyone."
         if values['comp_q4'] != 'a':
@@ -446,7 +446,7 @@ class Comprehension(Page):
 
 
 class ComprehensionWaitPage(Page):
-    timer_text = 'Time remaining to wait for group members:'
+    timer_text = 'Time remaining to wait for group members to join:'
 
     @staticmethod
     def is_displayed(player):
@@ -454,7 +454,7 @@ class ComprehensionWaitPage(Page):
 
     @staticmethod
     def get_timeout_seconds(player):
-        return 1200  # 20 minutes
+        return 600  # 10 minutes
 
     @staticmethod
     def live_method(player, data):
