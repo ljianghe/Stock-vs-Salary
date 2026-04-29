@@ -197,7 +197,10 @@ def group_should_end(player):
         p for p in player.group.get_players()
         if p.role() == C.MEMBER_ROLE and not p.participant.is_dropout
     ]
-    return len(active_members) <= 1
+    leader = player.group.get_player_by_role(C.LEADER_ROLE)
+    leader_active = not leader.participant.is_dropout
+    # Need leader + at least 2 members to continue
+    return not leader_active or len(active_members) <= 1
 
 
 def mark_dropout(player):
@@ -437,6 +440,17 @@ class Comprehension(Page):
             player.comp_attempt_log = json.dumps(log)
             if player.comp_attempts < 3:
                 return {k: 'Incorrect. Please try again.' for k in wrong}
+            if player.comp_attempts >= 4:
+                answers = {}
+                if 'comp_q1' in wrong:
+                    answers['comp_q1'] = "The correct answer is 1. Each contributed token reduces the private account by 1."
+                if 'comp_q2' in wrong:
+                    answers['comp_q2'] = "The correct answer is 18. (40 total tokens × 1.8 = 72) ÷ 4 members = 18 tokens each."
+                if 'comp_q3' in wrong:
+                    answers['comp_q3'] = "The correct answer is (c). When tokens are contributed to the Group Account, they are multiplied by 1.8 and split among all members — so every member benefits from contributions, not just the contributor."
+                if 'comp_q4' in wrong:
+                    answers['comp_q4'] = "The correct answer is (a). The leader earns 50% of total contributions to the Group Account. The more the group contributes, the more the leader earns."
+                return answers
             return wrong
         return {}
 
@@ -466,8 +480,12 @@ class ComprehensionWaitPage(Page):
     def before_next_page(player, timeout_happened):
         if timeout_happened:
             group = player.group
-            all_ready = all(p.participant.lobby_ready for p in group.get_players())
-            if not all_ready:
+            # Mark non-ready players as dropouts instead of ending the game
+            for p in group.get_players():
+                if not p.participant.lobby_ready:
+                    mark_dropout(p)
+            # Only mark group_incomplete if too few remain (need leader + at least 2 members)
+            if group_should_end(player):
                 for p in group.get_players():
                     p.participant.group_incomplete = True
 
@@ -520,7 +538,7 @@ class RoundStartWaitPage(Page):
 
     @staticmethod
     def get_timeout_seconds(player):
-        return 60
+        return 130
 
     @staticmethod
     def live_method(player, data):
@@ -676,7 +694,7 @@ class ViewMessageAndContribute(Page):
 
     @staticmethod
     def get_timeout_seconds(player):
-        return 30
+        return 120
 
     @staticmethod
     def vars_for_template(player):
@@ -734,7 +752,7 @@ class WaitForContributions(Page):
 
     @staticmethod
     def get_timeout_seconds(player):
-        return C.CONTRIBUTION_TIME_SECONDS + 5
+        return C.CONTRIBUTION_TIME_SECONDS + 15
 
     @staticmethod
     def live_method(player, data):
@@ -771,7 +789,7 @@ class ResultsWaitPage(Page):
 
     @staticmethod
     def get_timeout_seconds(player):
-        return 30
+        return 130
 
     @staticmethod
     def live_method(player, data):
@@ -848,7 +866,7 @@ class LeaderTrustRating(Page):
 
     @staticmethod
     def get_timeout_seconds(player):
-        return 60
+        return 120
 
     @staticmethod
     def vars_for_template(player):
@@ -894,7 +912,7 @@ class MemberTrustRating(Page):
 
     @staticmethod
     def get_timeout_seconds(player):
-        return 60
+        return 120
 
     @staticmethod
     def vars_for_template(player):
@@ -936,7 +954,7 @@ class TrustRatingsWaitPage(Page):
 
     @staticmethod
     def get_timeout_seconds(player):
-        return 70
+        return 135
 
     @staticmethod
     def live_method(player, data):
@@ -962,8 +980,6 @@ class Survey(Page):
         return (
             is_my_treatment(player)
             and player.round_number == C.NUM_ROUNDS
-            and not player.participant.is_dropout
-            and not group_should_end(player)
         )
 
 
