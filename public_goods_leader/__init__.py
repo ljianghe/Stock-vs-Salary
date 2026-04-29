@@ -481,7 +481,7 @@ class ComprehensionWaitPage(Page):
 
     @staticmethod
     def get_timeout_seconds(player):
-        return 900  # 15 minutes
+        return 600  # 10 minutes
 
     @staticmethod
     def live_method(player, data):
@@ -993,8 +993,6 @@ class Survey(Page):
         return (
             is_my_treatment(player)
             and player.round_number == C.NUM_ROUNDS
-            and not player.participant.is_dropout
-            and not group_should_end(player)
         )
 
 
